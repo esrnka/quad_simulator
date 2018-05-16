@@ -4,7 +4,7 @@ clear all;
 
 %%  Parameters
 W.O = 7;                %Polynomial order
-W.tVecWp = 1*[0 4 8 12 16];   %Time to reach each waypoint
+W.tVecWp = 1*[0 2 4 6 8];   %Time to reach each waypoint
 W.Ts = 0.05;            %Output sampling period
 
 %Conditions on x
