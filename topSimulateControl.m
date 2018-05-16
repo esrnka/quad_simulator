@@ -19,17 +19,17 @@ tVec=[0:N-1]'*delt;
 
 % Prepare Minimum Snap pathplanning algorithm
 W.O = 7;                %Polynomial order
-W.tVecWp = [0 2 2 2 2];   %Time to reach each waypoint
+W.tVecWp = [0 2 4 6 8];   %Time to reach each waypoint
 W.Ts = delt;            %Output sampling period
 
 %Conditions on x
-x_w = [0 1 2 3 4];   %Position x at each waypoint
+x_w = [0 1 0 -1 0];   %Position x at each waypoint
 vx_w = [0 NaN NaN NaN 0];    %Velocity x at each waypoint
 ax_w = [0 NaN NaN NaN 0];    %Acceleration x at each waypoint
 jx_w = [0 NaN NaN NaN 0];    %Jerk x at each waypoint
 
 %Conditions on y
-y_w = [0 0 1 2 1];       %Position y at each waypoint
+y_w = [0 0 1 0 -1];       %Position y at each waypoint
 vy_w = [0 NaN NaN NaN 0];    %Velocity y at each waypoint
 ay_w = [0 NaN NaN NaN 0];    %Acceleration y at each waypoint
 jy_w = [0 NaN NaN NaN 0];    %Jerk y at each waypoint
@@ -49,7 +49,7 @@ W.jIwp = [jx_w' jy_w' jz_w'];
 R = PathSmoothing(W);
 R.xIstar = -R.rIstar/norm(R.rIstar);
 
-disp("Path Planning Complete")
+disp("Path Planning Complete")     
 
 % Matrix of disturbance forces acting on the body, in N, expressed in I.
 S.distMat= 0*3*randn(N-1,3);
@@ -82,6 +82,9 @@ end
 % Estimate the feature location
 [rXIHat, Re] = estimate3dFeatureLocation(Ms,P);
 
+% Begin Plotting
+
+% Real-time visualization of quad location
 S2.tVec = Q.tVec;
 S2.rMat = Q.state.rMat;
 S2.eMat = Q.state.eMat;
@@ -91,27 +94,34 @@ S2.gifFileName = 'testGif.gif';
 S2.bounds=2.5*[-1 1 -1 1 -0.1 1];
 visualizeQuad(S2);
 
-figure(2);clf;
-plot(Q.tVec,Q.state.rMat(:,3)); grid on;
-xlabel('Time (sec)');
-ylabel('Vertical (m)');
-title('Vertical position of CM'); 
+% Plot of desired trajectory
+figure(2); plot3(R.rIstar(:,1), R.rIstar(:,2), R.rIstar(:,3),'Linewidth',2); hold on; grid on;
+axislim = [min(R.rIstar(:,1))-0.5 max(R.rIstar(:,1))+0.5 ...
+           min(R.rIstar(:,2))-0.5 max(R.rIstar(:,2))+0.5 ...
+           min(R.rIstar(:,3))-0.5 max(R.rIstar(:,3))+0.5];
+xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');  
 
-figure(3);clf;
-psiError = unwrap(n*Q.tVec + pi - Q.state.eMat(:,3));
-meanPsiErrorInt = round(mean(psiError)/2/pi);
-plot(Q.tVec,psiError - meanPsiErrorInt*2*pi);
-grid on;
-xlabel('Time (sec)');
-ylabel('\Delta \psi (rad)');
-title('Yaw angle error');
-
-figure(5);clf;
-plot(Q.state.rMat(:,1), Q.state.rMat(:,2)); 
-axis equal; grid on;
-xlabel('X (m)');
-ylabel('Y (m)');
-title('Horizontal position of CM');
+% figure(2);clf;
+% plot(Q.tVec,Q.state.rMat(:,3)); grid on;
+% xlabel('Time (sec)');
+% ylabel('Vertical (m)');
+% title('Vertical position of CM'); 
+% 
+% figure(3);clf;
+% psiError = unwrap(Q.tVec + pi - Q.state.eMat(:,3));
+% meanPsiErrorInt = round(mean(psiError)/2/pi);
+% plot(Q.tVec,psiError - meanPsiErrorInt*2*pi);
+% grid on;
+% xlabel('Time (sec)');
+% ylabel('\Delta \psi (rad)');
+% title('Yaw angle error');
+% 
+% figure(5);clf;
+% plot(Q.state.rMat(:,1), Q.state.rMat(:,2)); 
+% axis equal; grid on;
+% xlabel('X (m)');
+% ylabel('Y (m)');
+% title('Horizontal position of CM');
 
 
 

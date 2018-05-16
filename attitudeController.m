@@ -57,7 +57,9 @@ KdC = 1*diag([0.1 0.1 0.9]);
 omegaB = S.statek.omegaB;
 omegaBx = crossProductEquivalent(omegaB);
 b = cross(R.zIstark,R.xIstark);
-b = b/norm(b);
+if norm(b) ~= 0
+    b = b/norm(b);
+end
 a = cross(b,R.zIstark);
 RBIstar = [a,b,R.zIstark]';
 RE = RBIstar*(S.statek.RBI');
