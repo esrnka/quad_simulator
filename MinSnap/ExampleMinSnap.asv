@@ -1,0 +1,64 @@
+clc;
+close all;
+clear all;
+
+%%  Parameters
+W.O = 7;                %Polynomial order
+W.tVecWp = 1*[0 2 6];   %Time to reach each waypoint
+W.Ts = 0.05;            %Output sampling period
+
+%Conditions on x
+x_w = [0 1.2 1.5];   %Position x at each waypoint
+vx_w = [0 NaN 0];    %Velocity x at each waypoint
+ax_w = [0 NaN 0];    %Acceleration x at each waypoint
+jx_w = [0 NaN 0];    %Jerk x at each waypoint
+
+%Conditions on y
+y_w = [0 0 1];       %Position y at each waypoint
+vy_w = [0 NaN 0];    %Velocity x at each waypoint
+ay_w = [0 NaN 0];    %Acceleration y at each waypoint
+jy_w = [0 NaN 0];    %Jerk y at each waypoint
+
+%Conditions on z
+z_w = [0 1 1];   %Position z at each waypoint
+vz_w = [0 NaN 0];
+az_w = [0 NaN 0];
+jz_w = [0 NaN 0];
+
+W.rIwp = [x_w' y_w' z_w'];
+W.vIwp = [vx_w' vy_w' vz_w'];
+W.aIwp = [ax_w' ay_w' az_w'];
+W.jIwp = [jx_w' jy_w' jz_w'];
+
+%%  Solve minimum snap
+[R] = PathSmoothing(W);
+
+%%  Plot results
+n_w = numel(W.tVecWp);  %Number of waypoints
+figure(1); 
+subplot(4,1,1);plot(R.tVec, R.rIstar(:,1)); hold on; title('rIstar_x');
+subplot(4,1,2);plot(R.tVec, R.vIstar(:,1)); hold on; title('vIstar_x');
+subplot(4,1,3);plot(R.tVec, R.aIstar(:,1)); hold on; title('aIstar_x');
+subplot(4,1,4);plot(R.tVec, R.jIstar(:,1)); hold on; title('jIstar_x');
+
+figure(2); 
+subplot(4,1,1);plot(R.tVec, R.rIstar(:,2)); hold on; title('rIstar_y');
+subplot(4,1,2);plot(R.tVec, R.vIstar(:,2)); hold on; title('vIstar_y');
+subplot(4,1,3);plot(R.tVec, R.aIstar(:,2)); hold on; title('aIstar_y');
+subplot(4,1,4);plot(R.tVec, R.jIstar(:,2)); hold on; title('rjIstar_y');
+
+figure(3); 
+subplot(4,1,1);plot(R.tVec, R.rIstar(:,3)); hold on; title('rIstar_z');
+subplot(4,1,2);plot(R.tVec, R.vIstar(:,3)); hold on; title('vIstar_z');
+subplot(4,1,3);plot(R.tVec, R.aIstar(:,3)); hold on; title('aIstar_z');
+subplot(4,1,4);plot(R.tVec, R.jIstar(:,3)); hold on; title('jIstar_z');
+
+figure(4); plot3(R.rIstar(:,1), R.rIstar(:,2), R.rIstar(:,3)); hold on; grid on;
+axislim = [min(R.rIstar(:,1))-0.5 max(R.rIstar(:,1))+0.5 ...
+           min(R.rIstar(:,2))-0.5 max(R.rIstar(:,2))+0.5 ...
+           min(R.rIstar(:,3))-0.5 max(R.rIstar(:,3))+0.5];
+for i = 1:n_w
+    plot3(x_w(i),y_w(i),z_w(i),'r*'); 
+    axis(axislim);
+end
+xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');
