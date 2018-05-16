@@ -106,10 +106,9 @@ sol_az = reshape(sol_az,[W.O+1 (n_w-1)]);
 dt = W.Ts;
 
 % Align time vectors appropriately with topSimulateControl
-N = floor(W.tVecWp(end)/dt);
-R.tVec=[W.tVecWp(1):N]*dt;
 
-%R.tVec = W.tVecWp(1):dt:W.tVecWp(end);
+
+R.tVec = W.tVecWp(1):dt:W.tVecWp(end);
 k = 1;
 n_pts = numel(R.tVec);
 R.rIstar = zeros(n_pts, 3);

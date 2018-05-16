@@ -15,11 +15,11 @@ Tsim = 10;
 delt = 0.005;
 % Time vector, in seconds 
 N = floor(Tsim/delt);
-tVec=[0:N-1]'*delt;
+tVec=[0:N]'*delt;
 
 % Prepare Minimum Snap pathplanning algorithm
 W.O = 7;                %Polynomial order
-W.tVecWp = [0 2 4 6 8];   %Time to reach each waypoint
+W.tVecWp = [0 2 4 6 Tsim];   %Time to reach each waypoint
 W.Ts = delt;            %Output sampling period
 
 %Conditions on x
@@ -52,7 +52,7 @@ R.xIstar = -R.rIstar/norm(R.rIstar);
 disp("Path Planning Complete")     
 
 % Matrix of disturbance forces acting on the body, in N, expressed in I.
-S.distMat= 0*3*randn(N-1,3);
+S.distMat= 0*3*randn(N+1,3);
 % Initial position in m
 S.state0.r=[x_w(1) y_w(1) z_w(1)]';
 % Initial attitude expressed as Euler angles, in radians
@@ -80,7 +80,7 @@ else
 end
 
 % Estimate the feature location
-[rXIHat, Re] = estimate3dFeatureLocation(Ms,P);
+%[rXIHat, Re] = estimate3dFeatureLocation(Ms,P);
 
 % Begin Plotting
 
