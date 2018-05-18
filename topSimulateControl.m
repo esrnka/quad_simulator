@@ -10,7 +10,7 @@ rng(0);
 % otherwise, the control simulator is called
 estimationFlag = 1;
 % Total simulation time, in seconds
-Tsim = 10;
+Tsim = 40;
 % Control update interval, in seconds
 delt = 0.005;
 % Time vector, in seconds 
@@ -19,26 +19,26 @@ tVec=[0:N]'*delt;
 
 % Prepare Minimum Snap pathplanning algorithm
 W.O = 7;                %Polynomial order
-W.tVecWp = [0 4 6 8 Tsim];   %Time to reach each waypoint
+W.tVecWp = [0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 Tsim];   %Time to reach each waypoint
 W.Ts = delt;            %Output sampling period
 
 %Conditions on x
-x_w = [0 1 0 -1 0];   %Position x at each waypoint
-vx_w = [0 NaN NaN NaN 0];    %Velocity x at each waypoint
-ax_w = [0 NaN NaN NaN 0];    %Acceleration x at each waypoint
-jx_w = [0 NaN NaN NaN 0];    %Jerk x at each waypoint
+x_w = [0 1 0 -1.2 0 1.4 0 -1.6 0 1.8 0 -1.6 0 1.4 0 -1.2 0 1 0 -1.2];   %Position x at each waypoint
+vx_w = [0 NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN 0];    %Velocity x at each waypoint
+ax_w = [0 NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN 0];    %Acceleration x at each waypoint
+jx_w = [0 NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN 0];    %Jerk x at each waypoint
 
 %Conditions on y
-y_w = [0 0 1 0 -1];       %Position y at each waypoint
-vy_w = [0 NaN NaN NaN 0];    %Velocity y at each waypoint
-ay_w = [0 NaN NaN NaN 0];    %Acceleration y at each waypoint
-jy_w = [0 NaN NaN NaN 0];    %Jerk y at each waypoint
+y_w = [0 0 1.2 0 -1.4 0 1.6 0 -1.8 0 1.6 0 -1.4 0 1.2 0 -1 0 1.2 0];       %Position y at each waypoint
+vy_w = [0 NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN 0];    %Velocity y at each waypoint
+ay_w = [0 NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN 0];    %Acceleration y at each waypoint
+jy_w = [0 NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN 0];    %Jerk y at each waypoint
 
 %Conditions on z
-z_w = [0 1 1.5 1 0.5];       %Position z at each waypoint
-vz_w = [0 NaN NaN NaN 0];    %Velocity y at each waypoint
-az_w = [0 NaN NaN NaN 0];    %Acceleration y at each waypoint
-jz_w = [0 NaN NaN NaN 0];    %Jerk x at each waypoint
+z_w = [0 1 1.8 2 2.3 3.9 4.1 3.6 2.2 2 2.5 3 3.4 4.4 4 3.5 2 1.5 1 1.5];       %Position z at each waypoint
+vz_w = [0 NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN 0];    %Velocity y at each waypoint
+az_w = [0 NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN 0];    %Acceleration y at each waypoint
+jz_w = [0 NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN 0];    %Jerk x at each waypoint
 
 W.rIwp = [x_w' y_w' z_w'];
 W.vIwp = [vx_w' vy_w' vz_w'];
@@ -89,7 +89,7 @@ S2.eMat = Q.state.eMat;
 S2.plotFrequency = 20;
 S2.makeGifFlag = false;
 S2.gifFileName = 'testGif.gif';
-S2.bounds=2.5*[-1 1 -1 1 -0.1 1];
+S2.bounds=5*[-0.4 0.4 -0.4 0.4 -0.15 1.1];
 visualizeQuad(S2);
 
 % Plot of desired trajectory
@@ -101,7 +101,7 @@ xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');
 
 % Plot of norm of lever arm covariance
 figure(3); plot(tVec(1:end-1),Q.state.PlB); xlabel('t (s)'); ylabel('Norm of P_{lB}');
-text(5, 0.008, ['Final lever arm: ' num2str(Q.state.lB(end,:))]);
+text(5, Q.state.PlB(1)/2, ['Final lever arm: ' num2str(Q.state.lB(end,:))]);
 % figure(2);clf;
 % plot(Q.tVec,Q.state.rMat(:,3)); grid on;
 % xlabel('Time (sec)');
