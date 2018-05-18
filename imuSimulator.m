@@ -46,7 +46,6 @@ function [fB,omegaBtilde] = imuSimulator(S,P)
 %
 % Author:  
 %+==============================================================================+
-
 persistent ba bg
 
 if(isempty(ba))

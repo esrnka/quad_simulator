@@ -3,9 +3,9 @@ function [zk] = h_meas(xk,wk,RBIBark,vIMat,P)
 %
 % INPUTS
 %
-% xk --------- 15x1 state vector at time tk, defined as 
+% xk --------- 18x1 state vector at time tk, defined as 
 % 
-%              xk = [rI', vI', e', ba', bg']'
+%              xk = [rI', vI', e', ba', bg', lB']'
 %
 %              where all corresponding quantities are identical to those
 %              defined for E.statek in stateEstimatorUKF.m and where e is the

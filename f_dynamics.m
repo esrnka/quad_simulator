@@ -3,9 +3,9 @@ function [xkp1] = f_dynamics(xk,uk,vk,delt,RBIHatk,P)
 %
 % INPUTS
 %
-% xk --------- 15x1 state vector at time tk, defined as 
+% xk --------- 18x1 state vector at time tk, defined as 
 % 
-%              xk = [rI', vI', e', ba', bg']'
+%              xk = [rI', vI', e', ba', bg', lB']'
 %
 %              where all corresponding quantities are identical to those
 %              defined for E.statek in stateEstimatorUKF.m and where e is the
@@ -51,7 +51,7 @@ function [xkp1] = f_dynamics(xk,uk,vk,delt,RBIHatk,P)
 %
 % OUTPUTS
 %
-% xkp1 ------- 15x1 state vector propagated to time tkp1
+% xkp1 ------- 18x1 state vector propagated to time tkp1
 %
 %+------------------------------------------------------------------------------+
 % References:
@@ -69,23 +69,24 @@ vIk = xk(4:6);
 ek = xk(7:9);
 bak = xk(10:12);
 bgk = xk(13:15);
+lBk = xk(16:18);
 omegaBtildek = uk(1:3);
 fBk = uk(4:6);
 vgk = vk(1:3);
 vg2k = vk(4:6);
 vak = vk(7:9);
 va2k = vk(10:12);
-lB = P.sensorParams.lB;
 RBIk = euler2dcm(ek)*RBIHatk;
 
 rIkp1 = rIk + delt*vIk;
 omegaBk = omegaBtildek - bgk - vgk; 
-aIk = RBIk'*(fBk - cross(omegaBk,cross(omegaBk,lB)) - bak - vak) - ...
+aIk = RBIk'*(fBk - cross(omegaBk,cross(omegaBk,lBk)) - bak - vak) - ...
       P.constants.g*[0;0;1];
 edotk = omegaBtildek - bgk - vgk;
 vIkp1 = vIk + delt*aIk;
 ekp1 = ek + delt*edotk;
+lBkp1 = lBk;
 bakp1 = P.sensorParams.alphaa*bak + va2k;
 bgkp1 = P.sensorParams.alphag*bgk + vg2k;
 
-xkp1 = [rIkp1;vIkp1;ekp1;bakp1;bgkp1];
+xkp1 = [rIkp1;vIkp1;ekp1;lBkp1;bakp1;bgkp1];
