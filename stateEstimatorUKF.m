@@ -265,6 +265,9 @@ xBarkp1(7:9) = zeros(3,1);
 % Set k = kp1 in preparation for next iteration
 RBIBark = RBIBarkp1; xBark = xBarkp1; PBark = PBarkp1;                      % Propagate states forward
 
+% Output Pbark lever arm covariance to evaluate estimability criteria
+E.PlB = PBark(16:18,16:18);
+
 
 
 

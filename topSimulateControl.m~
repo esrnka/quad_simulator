@@ -100,8 +100,8 @@ axislim = [min(R.rIstar(:,1))-0.5 max(R.rIstar(:,1))+0.5 ...
 xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');  
 
 % Plot of norm of lever arm covariance
-figure(3); plot(tVec(1:end-1),Q.state.PlB); xlabel('t (s)'); ylabel('Norm of P_{lB}');
-text(5, 0.008, ['Final lever arm: ' num2str(Q.state.lB(end,:))]);
+figure(3); plot(tvec(1:end-1),Q.state.PlB);
+xlabel('t (s)'); ylabel(
 % figure(2);clf;
 % plot(Q.tVec,Q.state.rMat(:,3)); grid on;
 % xlabel('Time (sec)');
