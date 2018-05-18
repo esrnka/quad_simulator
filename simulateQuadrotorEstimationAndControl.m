@@ -143,6 +143,7 @@ for kk=1:N-1
   [M.fB,M.omegaBtilde] = imuSimulator(Sm,P);
   % Call estimator
   E = stateEstimatorUKF(Se,M,P);
+  Q.state.lB = E.statek.lB;
   %E = stateEstimator(Se,M,P);
   if(~isempty(E.statek))
     % Call trajectory and attitude controllers
@@ -217,7 +218,6 @@ Q.state.rMat = XMat(:,1:3);
 Q.state.vMat = XMat(:,4:6);
 Q.state.omegaBMat = XMat(:,16:18);
 Q.state.eMat = zeros(M,3);
-Q.testData = E.statek;
 RBI = zeros(3,3);
 for mm=1:M
   RBI(:) = XMat(mm,7:15);

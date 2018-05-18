@@ -89,4 +89,4 @@ lBkp1 = lBk;
 bakp1 = P.sensorParams.alphaa*bak + va2k;
 bgkp1 = P.sensorParams.alphag*bgk + vg2k;
 
-xkp1 = [rIkp1;vIkp1;ekp1;lBkp1;bakp1;bgkp1];
+xkp1 = [rIkp1;vIkp1;ekp1;bakp1;bgkp1;lBkp1];

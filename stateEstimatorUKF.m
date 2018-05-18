@@ -132,11 +132,11 @@ if(isempty(xBark))
   aVec = ones(2,1);                                                         % Weight vector 
   RBIBark = wahbaSolver(aVec,vIMat,vBMat);                                  % Initial estimate of RBI matrix
   rIBark = rPItilde - RBIBark'*rPB;                                         % Inertial frame position
-  lB0 = [-0.0884; 0.0134; -0.0399];                                                  % Initial lever arm estimate
+  lB0 = [-0.1; 0.1; -0.1];                                                  % Initial lever arm estimate
   xBark = [rIBark; zeros(12,1); lB0];                                       % Initial state vector estimate
   QbaSteadyState = P.sensorParams.Qa2/(1 - P.sensorParams.alphaa^2);        % Steady state error covariance matrix of accelerometer bias
   QbgSteadyState = P.sensorParams.Qg2/(1 - P.sensorParams.alphag^2);        % Steady state error covariance matrix of gyro bias
-  Qlb = 1e-6*ones(3,1);                                                    % Lever arm error covariance matrix
+  Qlb = 0.01*ones(3,1);                                                     % Lever arm error covariance matrix
   PBark = diag([0.0025*ones(3,1); 0.001*ones(3,1); 0.01*ones(3,1); ...      % Initial estimate of state covariance matrix
                 diag(QbaSteadyState); diag(QbgSteadyState); Qlb]);  
 end

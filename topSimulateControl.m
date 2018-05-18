@@ -19,7 +19,7 @@ tVec=[0:N]'*delt;
 
 % Prepare Minimum Snap pathplanning algorithm
 W.O = 7;                %Polynomial order
-W.tVecWp = [0 2 4 6 Tsim];   %Time to reach each waypoint
+W.tVecWp = [0 4 6 8 Tsim];   %Time to reach each waypoint
 W.Ts = delt;            %Output sampling period
 
 %Conditions on x
@@ -35,7 +35,7 @@ ay_w = [0 NaN NaN NaN 0];    %Acceleration y at each waypoint
 jy_w = [0 NaN NaN NaN 0];    %Jerk y at each waypoint
 
 %Conditions on z
-z_w = [0 1 1 1 1];       %Position z at each waypoint
+z_w = [0 1 1.5 1 0.5];       %Position z at each waypoint
 vz_w = [0 NaN NaN NaN 0];    %Velocity y at each waypoint
 az_w = [0 NaN NaN NaN 0];    %Acceleration y at each waypoint
 jz_w = [0 NaN NaN NaN 0];    %Jerk x at each waypoint
@@ -47,9 +47,7 @@ W.jIwp = [jx_w' jy_w' jz_w'];
 
 %  Solve minimum snap to populate reference trajectory
 R = PathSmoothing(W);
-R.xIstar = -R.rIstar/norm(R.rIstar);
-
-disp("Path Planning Complete")     
+R.xIstar = -R.rIstar/norm(R.rIstar);    
 
 % Matrix of disturbance forces acting on the body, in N, expressed in I.
 S.distMat= 0*3*randn(N+1,3);

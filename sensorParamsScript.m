@@ -49,18 +49,18 @@ sensorParams.Qa = (9.8/1000)^2*(sensorParams.Sa/sensorParams.IMUdelt)*eye(3);
 % Accelerometer bias time constant, in seconds
 sensorParams.taua = 100;  
 % Accelerometer bias from accel. spec. sheet, in milli-g
-sensorParams.sigmaa = 100; 
+sensorParams.sigmaa = 10; 
 % Error covariance matrix for accelerometer bias noise, in (m/s^2)^2
 sensorParams.alphaa = exp(-sensorParams.IMUdelt/sensorParams.taua); 
 sensorParams.Qa2 = (9.8/1000)^2*(sensorParams.sigmaa)^2*(1 - sensorParams.alphaa^2)*eye(3);
 % Gyro white noise from spec. sheet, in (deg/s)^2/Hz
-sensorParams.Sg = (5e-2)^2; 
+sensorParams.Sg = (1e-2)^2; 
 % Error covariance matrix for gyro noise, in (rad/s)^2
 sensorParams.Qg = (pi/180)^2 * (sensorParams.Sg/sensorParams.IMUdelt)*eye(3);
 % Gyro bias time constant, in seconds
 sensorParams.taug = 100; 
 % Gyro bias from spec. sheet, in (deg/h)
-sensorParams.sigmag = 100; 
+sensorParams.sigmag = 10; 
 % Error covariance matrix for gyro bias noise, in (rad/s)^2
 sensorParams.alphag = exp(-sensorParams.IMUdelt/sensorParams.taug);
 sensorParams.Qg2 = (pi/(3600*180))^2*(sensorParams.sigmag)^2*(1-sensorParams.alphag^2)*eye(3);
