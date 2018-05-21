@@ -14,9 +14,9 @@ function [xkp1] = f_dynamics(xk,uk,vk,delt,RBIHatk,P)
 %              dRBI(e)*RBIHat, where dRBI(e) is the DCM formed from the error
 %              Euler angle vector e.
 %
-% uk --------- 6x1 IMU measurement input vector at time tk, defined as
+% uk --------- 10x1 measurement input vector at time tk, defined as
 %
-%              uk = [omegaBtilde', fB']'
+%              uk = [omegaBtilde', fB', omegaVec']'
 %
 %              where all corresponding quantities are identical to those
 %              defined for M in stateEstimatorUKF.m.
@@ -72,6 +72,8 @@ bgk = xk(13:15);
 lBk = xk(16:18);
 omegaBtildek = uk(1:3);
 fBk = uk(4:6);
+omegaVeck = uk(7:10);
+
 vgk = vk(1:3);
 vg2k = vk(4:6);
 vak = vk(7:9);
@@ -80,8 +82,17 @@ RBIk = euler2dcm(ek)*RBIHatk;
 
 rIkp1 = rIk + delt*vIk;
 omegaBk = omegaBtildek - bgk - vgk; 
-aIk = RBIk'*(fBk - cross(omegaBk,cross(omegaBk,lBk)) - bak - vak) - ...
-      P.constants.g*[0;0;1];
+% Determine current omegaBdotk
+FMat = [zeros(2,4);(P.quadParams.kF.*(omegaVeck.^2))'];
+NMat = [zeros(2,4);(P.quadParams.kN.*(omegaVeck.^2).*(-P.quadParams.omegaRdir)')'];
+NB = sum(NMat,2);
+Jq = P.quadParams.Jq;
+for ii=1:4
+  NB = NB + cross(P.quadParams.rotor_loc(:,ii),FMat(:,ii));
+end
+omegaBdotk = Jq\(NB - crossProductEquivalent(omegaBk)*Jq*omegaBk);
+aIk = RBIk'*(fBk - cross(omegaBdotk,lBk) - cross(omegaBk,cross(omegaBk,lBk)) ...
+    - bak - vak) - P.constants.g*[0;0;1];
 edotk = omegaBtildek - bgk - vgk;
 vIkp1 = vIk + delt*aIk;
 ekp1 = ek + delt*edotk;

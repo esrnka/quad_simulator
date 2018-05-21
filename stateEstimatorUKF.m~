@@ -43,9 +43,6 @@ function [E] = stateEstimatorUKF(S,M,P)
 %
 %   omegaBtilde = 3x1 angular rate measured by the IMU's 3-axis rate gyro
 %
-%      omegaVec = 4x1 vector of rotor angular rates, in rad/sec.
-%                 omegaVec(i) is the angular rate of the ith rotor.
-%
 %
 % P ---------- Structure with the following elements:
 %
@@ -110,7 +107,7 @@ rCBu = rCB/norm(rCB);                                                       %Uni
 rPB = P.sensorParams.rA(:,1);                                               %Location of primary antenna in body frame
 e3 = [0;0;1];                                                               %z axis vector
 epsilon = 1e-8;                                                             %
-nx = 18;                                                                    % size of state vector
+nx = 27;                                                                    % size of state vector
 nv = 12;                                                                    % size of process noise vector
 alphaUKF = 1e-3;                                                            % UKF tuning parameter
 betaUKF = 2;                                                                % UKF tuning parameter
@@ -247,7 +244,7 @@ Sx = chol(PAugk)';                                                          % Ch
 % Assemble sigma points and push these through the dynamics function
 sp0 = xHatAugk;
 xpMat = zeros(nx,2*(nx+nv));
-uk = [M.omegaBtilde;M.fB;M.omegaVec];
+uk = [M.omegaBtilde;M.fB];
 xp0 = f_dynamics(sp0(1:nx),uk,sp0(nx+1:end),S.delt,RBIHatk,P);
 for ii=1:2*(nx+nv)
   jj = ii; pm = 1;

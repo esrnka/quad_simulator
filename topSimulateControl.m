@@ -66,6 +66,9 @@ visualizeQuad(S2);
 % Plot of norm of lever arm covariance
 figure(3); plot(tVec(1:end-1),Q.state.PlB); xlabel('t (s)'); ylabel('Norm of P_{lB}');
 text(5, Q.state.PlB(1)/2, ['Final lever arm: ' num2str(Q.state.lB(end,:))]);
+
+Q.state.lB(end,:)' - P.sensorParams.lB
+norm(Q.state.lB(end,:)' - P.sensorParams.lB)
 % figure(2);clf;
 % plot(Q.tVec,Q.state.rMat(:,3)); grid on;
 % xlabel('Time (sec)');

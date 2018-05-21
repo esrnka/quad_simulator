@@ -124,8 +124,8 @@ Q.state.lB = []; Q.state.PlB = [];
 for kk=1:N-1
   % Simulate measurements
   statek.rI = Xk(1:3);
-  statek.RBI(:) = Xk(7:15);
   statek.vI = Xk(4:6);
+  statek.RBI(:) = Xk(7:15);
   statek.omegaB = Xk(16:18);
   statek.aI = Xdotk(4:6);
   statek.omegaBdot = Xdotk(16:18);
@@ -142,6 +142,7 @@ for kk=1:N-1
     end
   end
   [M.fB,M.omegaBtilde] = imuSimulator(Sm,P);
+   M.omegaVec = Xk(19:22);
   % Call estimator
   E = stateEstimatorUKF(Se,M,P);
   Q.state.lB = [Q.state.lB; E.statek.lB'];
