@@ -43,7 +43,7 @@ sensorParams.IMUdelt = 0.005;
 % 3x1 position of IMU accelerometer proof mass in the B frame, in meters.
 sensorParams.lB = [-0.0884; 0.0134; -0.0399];
 % Accelerometer white noise from accel. spec. sheet, in (milli-g)^2/Hz
-sensorParams.Sa = (0.003)^2; 
+sensorParams.Sa = (0.1)^2; 
 sensorParams.Sa_f = (0.2)^2; %fictitious
 % Error covariance matrix for accelerometer noise, in (m/s^2)^2
 sensorParams.Qa = (9.8/1000)^2*(sensorParams.Sa/sensorParams.IMUdelt)*eye(3);
@@ -51,24 +51,20 @@ sensorParams.Qa_f = (9.8/1000)^2*(sensorParams.Sa_f/sensorParams.IMUdelt)*eye(3)
 % Accelerometer bias time constant, in seconds
 sensorParams.taua = 100;  
 % Accelerometer bias from accel. spec. sheet, in milli-g
-sensorParams.sigmaa = 0.01;
+sensorParams.sigmaa = 1;
 sensorParams.sigmaa_f = 20; %fictitious
 % Error covariance matrix for accelerometer bias noise, in (m/s^2)^2
 sensorParams.alphaa = exp(-sensorParams.IMUdelt/sensorParams.taua); 
 sensorParams.Qa2 = (9.8/1000)^2*(sensorParams.sigmaa)^2*(1 - sensorParams.alphaa^2)*eye(3);
-sensorParams.Qa2_f = (9.8/1000)^2*(sensorParams.sigmaa_f)^2*(1 - sensorParams.alphaa^2)*eye(3); % fictitious covariance
+sensorParams.Qa2_f = (9.8/1000)^2*(sensorParams.sigmaa_f)^2*(1 - sensorParams.alphaa^2)*eye(3);
 % Gyro white noise from spec. sheet, in (deg/s)^2/Hz
-sensorParams.Sg = (3e-5)^2; 
-sensorParams.Sg_f = (5e-2)^2;
+sensorParams.Sg = (1e-2)^2; 
 % Error covariance matrix for gyro noise, in (rad/s)^2
 sensorParams.Qg = (pi/180)^2 * (sensorParams.Sg/sensorParams.IMUdelt)*eye(3);
-sensorParams.Qg_f = (pi/180)^2 * (sensorParams.Sg_f/sensorParams.IMUdelt)*eye(3); % fictitious
 % Gyro bias time constant, in seconds
 sensorParams.taug = 100; 
 % Gyro bias from spec. sheet, in (deg/h)
-sensorParams.sigmag = 0.01;
-sensorParams.sigmag_f = 100; % fictitious
+sensorParams.sigmag = 10; 
 % Error covariance matrix for gyro bias noise, in (rad/s)^2
 sensorParams.alphag = exp(-sensorParams.IMUdelt/sensorParams.taug);
 sensorParams.Qg2 = (pi/(3600*180))^2*(sensorParams.sigmag)^2*(1-sensorParams.alphag^2)*eye(3);
-sensorParams.Qg2_f = (pi/(3600*180))^2*(sensorParams.sigmag_f)^2*(1-sensorParams.alphag^2)*eye(3); % fictitious

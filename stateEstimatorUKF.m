@@ -137,8 +137,8 @@ if(isempty(xBark))
   rIBark = rPItilde - RBIBark'*rPB;                                         % Inertial frame position
   lB0 = [-0.01; 0.01; -0.01];                                                  % Initial lever arm estimate
   xBark = [rIBark; zeros(12,1); lB0];                                       % Initial state vector estimate
-  QbaSteadyState = P.sensorParams.Qa2/(1 - P.sensorParams.alphaa^2);        % Steady state error covariance matrix of accelerometer bias
-  QbgSteadyState = P.sensorParams.Qg2/(1 - P.sensorParams.alphag^2);        % Steady state error covariance matrix of gyro bias
+  QbaSteadyState = P.sensorParams.Qa2_f/(1 - P.sensorParams.alphaa^2);        % Steady state error covariance matrix of accelerometer bias
+  QbgSteadyState = P.sensorParams.Qg2_f/(1 - P.sensorParams.alphag^2);        % Steady state error covariance matrix of gyro bias
   Qlb = 0.01*ones(3,1);                                                     % Lever arm error covariance matrix
   PBark = diag([0.0025*ones(3,1); 0.001*ones(3,1); 0.01*ones(3,1); ...      % Initial estimate of state covariance matrix
                 diag(QbaSteadyState); diag(QbgSteadyState); Qlb]);  
@@ -239,8 +239,8 @@ end
 %----- Propagate state to time tkp1
 RBIHatk = statek.RBI;                                                       % Set the best estimate of the RBI matrix
 xHatk(7:9) = zeros(3,1);                                                    % Estimate of euler angles to zero
-Qk = blkdiag(P.sensorParams.Qg,P.sensorParams.Qg2,...
-  P.sensorParams.Qa,P.sensorParams.Qa2);                                    % Covariance matrix of IMU
+Qk = blkdiag(P.sensorParams.Qg_f,P.sensorParams.Qg2_f,...
+  P.sensorParams.Qa_f,P.sensorParams.Qa2_f);                                    % Covariance matrix of IMU
 xHatAugk = [xHatk; zeros(nv,1)];                                            % Augment state vector with process noise
 PAugk = blkdiag(Pk,Qk);                                                     % Augment covariance vector with imu covariance
 Sx = chol(PAugk)';                                                          % Cholesky square root of augmented covariance

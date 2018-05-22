@@ -33,7 +33,7 @@ S.state0.omegaB=[0 0 0]';
 % Oversampling factor
 S.oversampFact=2;
 % Feature locations in the I frame
-S.rXIMat = [0,0,1; 0,0,0.5; 1,1,1; 0,0,2; 1,0,1; 1,0,2; 2,0,0];
+S.rXIMat = [0,0,1; 0,0,0.5; 1,1,1; 0,0,2; 1,0,1; 1,0,2; 2,0,0; 3,0,0];
 % Quadrotor parameters and constants
 quadParamsScript;
 constantsScript;

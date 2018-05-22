@@ -91,7 +91,7 @@ for ii=1:4
   NB = NB + cross(P.quadParams.rotor_loc(:,ii),FMat(:,ii));
 end
 omegaBdotk = Jq\(NB - crossProductEquivalent(omegaBk)*Jq*omegaBk);
-aIk = RBIk'*(fBk - cross(omegaBdotk,lBk) - cross(omegaBk,cross(omegaBk,lBk)) ...
+aIk = RBIk'*(fBk - 0*cross(omegaBdotk,lBk) - cross(omegaBk,cross(omegaBk,lBk)) ...
     - bak - vak) - P.constants.g*[0;0;1];
 edotk = omegaBtildek - bgk - vgk;
 vIkp1 = vIk + delt*aIk;
