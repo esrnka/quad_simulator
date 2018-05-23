@@ -25,7 +25,7 @@ function [Q,Ms] = simulateQuadrotorEstimationAndControl(R,S,P)
 %        xIstar = Nx3 matrix of desired body x-axis direction, expressed as a
 %                 unit vector in the I frame. xIstar(k,:)' is the 3x1
 %                 direction at time tk = tVec(k).
-%  
+%
 % S ---------- Structure with the following elements:
 %
 %  oversampFact = Oversampling factor. Let dtIn = R.tVec(2) - R.tVec(1). Then
@@ -34,15 +34,15 @@ function [Q,Ms] = simulateQuadrotorEstimationAndControl(R,S,P)
 %
 %        state0 = State of the quad at R.tVec(1) = 0, expressed as a structure
 %                 with the following elements:
-%                   
+%
 %                   r = 3x1 position in the world frame, in meters
-% 
+%
 %                   e = 3x1 vector of Euler angles, in radians, indicating the
 %                       attitude
 %
 %                   v = 3x1 velocity with respect to the world frame and
 %                       expressed in the world frame, in meters per second.
-%                 
+%
 %              omegaB = 3x1 angular rate vector expressed in the body frame,
 %                       in radians per second.
 %
@@ -55,15 +55,15 @@ function [Q,Ms] = simulateQuadrotorEstimationAndControl(R,S,P)
 %        rXIMat = Nf-by-3 matrix of coordinates of visual features in the
 %                 simulation environment, expressed in meters in the I
 %                 frame. rXIMat(i,:)' is the 3x1 vector of coordinates of
-%                 the ith feature.  
+%                 the ith feature.
 %
 % P ---------- Structure with the following elements:
 %
 %    quadParams = Structure containing all relevant parameters for the
-%                 quad, as defined in quadParamsScript.m 
+%                 quad, as defined in quadParamsScript.m
 %
 %     constants = Structure containing constants used in simulation and
-%                 control, as defined in constantsScript.m 
+%                 control, as defined in constantsScript.m
 %
 %  sensorParams = Structure containing sensor parameters, as defined in
 %                 sensorParamsScript.m
@@ -76,13 +76,13 @@ function [Q,Ms] = simulateQuadrotorEstimationAndControl(R,S,P)
 %          tVec = Mx1 vector of output sample time points, in seconds, where
 %                 Q.tVec(1) = R.tVec(1), Q.tVec(M) = R.tVec(N), and M =
 %                 (N-1)*oversampFact + 1.
-%  
+%
 %         state = State of the quad at times in tVec, expressed as a
 %                 structure with the following elements:
-%                   
+%
 %                rMat = Mx3 matrix composed such that rMat(k,:)' is the 3x1
 %                       position at tVec(k) in the I frame, in meters.
-% 
+%
 %                eMat = Mx3 matrix composed such that eMat(k,:)' is the 3x1
 %                       vector of Euler angles at tVec(k), in radians,
 %                       indicating the attitude.
@@ -91,7 +91,7 @@ function [Q,Ms] = simulateQuadrotorEstimationAndControl(R,S,P)
 %                       velocity at tVec(k) with respect to the I frame
 %                       and expressed in the I frame, in meters per
 %                       second.
-%                 
+%
 %           omegaBMat = Mx3 matrix composed such that omegaBMat(k,:)' is the
 %                       3x1 angular rate vector expressed in the body frame in
 %                       radians, that applies at tVec(k).
@@ -100,8 +100,8 @@ function [Q,Ms] = simulateQuadrotorEstimationAndControl(R,S,P)
 % References:
 %
 %
-% Author:  
-%+==============================================================================+  
+% Author:
+%+==============================================================================+
 
 last = 0;
 N = length(R.tVec);
@@ -120,74 +120,85 @@ Ms.rxArray = {};
 Ms.RCIArray = {};
 Ms.rcArray = {};
 Q.state.lB = []; Q.state.PlB = [];
+% Initialize outputs for neural network training
+Q.meas.rPtilde = []; Q.meas.rStilde = []; Q.meas.rCtilde = [];
+Q.meas.fB = []; Q.meas.omegaBtilde = []; Q.meas.tk = [];
 
 for kk=1:N-1
-  % Simulate measurements
-  statek.rI = Xk(1:3);
-  statek.vI = Xk(4:6);
-  statek.RBI(:) = Xk(7:15);
-  statek.omegaB = Xk(16:18);
-  statek.aI = Xdotk(4:6);
-  statek.omegaBdot = Xdotk(16:18);
-  Sm.statek = statek;
-  % Simulate measurements
-  M.tk=dtIn*(kk-1);
-  [M.rPtilde,M.rStilde,M.rCtilde] = gnssMeasSimulator(Sm,P);
-  for ii=1:Nf
-    rx = hdCameraSimulator(S.rXIMat(ii,:)',Sm,P);
-    if(isempty(rx))
-      M.rxMat(ii,:) = [NaN,NaN];
-    else
-      M.rxMat(ii,:) = rx';
+    % Simulate measurements
+    statek.rI = Xk(1:3);
+    statek.vI = Xk(4:6);
+    statek.RBI(:) = Xk(7:15);
+    statek.omegaB = Xk(16:18);
+    statek.aI = Xdotk(4:6);
+    statek.omegaBdot = Xdotk(16:18);
+    Sm.statek = statek;
+    % Simulate measurements
+    M.tk=dtIn*(kk-1);
+    [M.rPtilde,M.rStilde,M.rCtilde] = gnssMeasSimulator(Sm,P);
+    for ii=1:Nf
+        rx = hdCameraSimulator(S.rXIMat(ii,:)',Sm,P);
+        if(isempty(rx))
+            M.rxMat(ii,:) = [NaN,NaN];
+        else
+            M.rxMat(ii,:) = rx';
+        end
     end
-  end
-  [M.fB,M.omegaBtilde] = imuSimulator(Sm,P);
-   M.omegaVec = Xk(19:22);
-  % Call estimator
-  E = stateEstimatorUKF(Se,M,P);
-  Q.state.lB = [Q.state.lB; E.statek.lB'];
-  Q.state.PlB = [Q.state.PlB; norm(E.Pk(16:18,16:18))];
-  %E = stateEstimator(Se,M,P);
-  if(~isempty(E.statek))
-    % Call trajectory and attitude controllers
-    Rtc.rIstark = R.rIstar(kk,:)';
-    Rtc.vIstark = R.vIstar(kk,:)';
-    Rtc.aIstark = R.aIstar(kk,:)';
-    Rac.xIstark = R.xIstar(kk,:)';
-    distVeck = S.distMat(kk,:)';
-    Sc.statek = E.statek;
-    [Fk,Rac.zIstark] = trajectoryController(Rtc,Sc,P);
-    NBk = attitudeController(Rac,Sc,P);
-    % Convert commanded Fk and NBk to commanded voltages
-    eaVeck = voltageConverter(Fk,NBk,P);
-  else
-    % Apply no control if state estimator's output is empty.  Set distVeck to
-    % apply a normal force in the vertical direction that exactly offsets the
-    % acceleration due to gravity.
-    eaVeck = zeros(4,1);
-    distVeck = [0;0;P.quadParams.m*P.constants.g];
-  end
-  tspan = [R.tVec(kk):dtOut:R.tVec(kk+1)]';
-  [tVeck,XMatk] = ...
-      ode45(@(t,X) quadOdeFunctionHF(t,X,eaVeck,distVeck,P),tspan,Xk);
-  if(length(tspan) == 2)
-    % Deal with S.oversampFact = 1 case 
-    tVec = [tVec; tVeck(1)];
-    XMat = [XMat; XMatk(1,:)];
-  else
-    tVec = [tVec; tVeck(1:end-1)];
-    XMat = [XMat; XMatk(1:end-1,:)];
-  end
-  Xk = XMatk(end,:)';
-  Xdotk = quadOdeFunctionHF(tVeck(end),Xk,eaVeck,distVeck,P);
-  % Ensure that RBI remains orthogonal
-  if(mod(kk,100) == 0)
-   RBIk(:) = Xk(7:15);
-   [UR,~,VR]=svd(RBIk);
-   RBIk = UR*VR'; Xk(7:15) = RBIk(:);
-  end
-  
-  
+    [M.fB,M.omegaBtilde] = imuSimulator(Sm,P);
+    % Call estimator
+    E = stateEstimatorUKF(Se,M,P);
+    Q.state.lB = [Q.state.lB; E.statek.lB'];
+    Q.state.PlB = [Q.state.PlB; norm(E.Pk(16:18,16:18))];
+    
+    % Bundle in sensor measurements to use in neural network training
+    Q.meas.rPtilde = [Q.meas.rPtilde; M.rPtilde'];
+    Q.meas.rCtilde = [Q.meas.rCtilde; M.rCtilde'];
+    Q.meas.rStilde = [Q.meas.rStilde; M.rStilde'];
+    Q.meas.tk = [Q.meas.tk; M.tk];
+    Q.meas.fB = [Q.meas.fB; M.fB'];
+    Q.meas.omegaBtilde = [Q.meas.omegaBtilde; M.omegaBtilde'];
+    
+    %E = stateEstimator(Se,M,P);
+    if(~isempty(E.statek))
+        % Call trajectory and attitude controllers
+        Rtc.rIstark = R.rIstar(kk,:)';
+        Rtc.vIstark = R.vIstar(kk,:)';
+        Rtc.aIstark = R.aIstar(kk,:)';
+        Rac.xIstark = R.xIstar(kk,:)';
+        distVeck = S.distMat(kk,:)';
+        Sc.statek = E.statek;
+        [Fk,Rac.zIstark] = trajectoryController(Rtc,Sc,P);
+        NBk = attitudeController(Rac,Sc,P);
+        % Convert commanded Fk and NBk to commanded voltages
+        eaVeck = voltageConverter(Fk,NBk,P);
+    else
+        % Apply no control if state estimator's output is empty.  Set distVeck to
+        % apply a normal force in the vertical direction that exactly offsets the
+        % acceleration due to gravity.
+        eaVeck = zeros(4,1);
+        distVeck = [0;0;P.quadParams.m*P.constants.g];
+    end
+    tspan = [R.tVec(kk):dtOut:R.tVec(kk+1)]';
+    [tVeck,XMatk] = ...
+        ode45(@(t,X) quadOdeFunctionHF(t,X,eaVeck,distVeck,P),tspan,Xk);
+    if(length(tspan) == 2)
+        % Deal with S.oversampFact = 1 case
+        tVec = [tVec; tVeck(1)];
+        XMat = [XMat; XMatk(1,:)];
+    else
+        tVec = [tVec; tVeck(1:end-1)];
+        XMat = [XMat; XMatk(1:end-1,:)];
+    end
+    Xk = XMatk(end,:)';
+    Xdotk = quadOdeFunctionHF(tVeck(end),Xk,eaVeck,distVeck,P);
+    % Ensure that RBI remains orthogonal
+    if(mod(kk,100) == 0)
+        RBIk(:) = Xk(7:15);
+        [UR,~,VR]=svd(RBIk);
+        RBIk = UR*VR'; Xk(7:15) = RBIk(:);
+    end
+    
+    
     %Build images of the first feature point
     
     rx = hdCameraSimulator(S.rXIMat(1,:)',Sm,P);
@@ -195,18 +206,18 @@ for kk=1:N-1
     useEstimated = 1;
     if ~isempty(rx) && length(Ms.rxArray) < 10 && (kk-last) > 150
         if useEstimated
-          Ms.rxArray(end+1) = {rx};
-          Ms.RCIArray(end+1) = {P.sensorParams.RCB * RBIk};
-          Ms.rcArray(end+1) = {Sc.statek.rI + RBIk'*P.sensorParams.rc};
-          last = kk;
+            Ms.rxArray(end+1) = {rx};
+            Ms.RCIArray(end+1) = {P.sensorParams.RCB * RBIk};
+            Ms.rcArray(end+1) = {Sc.statek.rI + RBIk'*P.sensorParams.rc};
+            last = kk;
         else
-          Ms.rxArray(end+1) = {rx};
-          Ms.rcArray(end+1) = {statek.rI + statek.RBI'*P.sensorParams.rc};
-          Ms.RCIArray(end+1) = {P.sensorParams.RCB * statek.RBI;};
-          last = kk;
+            Ms.rxArray(end+1) = {rx};
+            Ms.rcArray(end+1) = {statek.rI + statek.RBI'*P.sensorParams.rc};
+            Ms.RCIArray(end+1) = {P.sensorParams.RCB * statek.RBI;};
+            last = kk;
         end
     end
-  
+    
 end
 XMat = [XMat;XMatk(end,:)];
 tVec = [tVec;tVeck(end,:)];
@@ -215,18 +226,18 @@ Ms.rxArray = Ms.rxArray';
 Ms.RCIArray = Ms.RCIArray';
 Ms.rcArray = Ms.rcArray';
 
-M = length(tVec);
 Q.tVec = tVec;
 Q.state.rMat = XMat(:,1:3);
 Q.state.vMat = XMat(:,4:6);
 Q.state.omegaBMat = XMat(:,16:18);
-Q.state.eMat = zeros(M,3);
+Q.state.eMat = zeros(length(tVec),3);
 RBI = zeros(3,3);
-for mm=1:M
-  RBI(:) = XMat(mm,7:15);
-  Q.state.eMat(mm,:) = dcm2euler(RBI)';  
+for mm=1:length(tVec)
+    RBI(:) = XMat(mm,7:15);
+    Q.state.eMat(mm,:) = dcm2euler(RBI)';
 end
 
 
-  
+
+
 

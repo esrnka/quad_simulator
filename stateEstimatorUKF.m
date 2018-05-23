@@ -247,7 +247,7 @@ Sx = chol(PAugk)';                                                          % Ch
 % Assemble sigma points and push these through the dynamics function
 sp0 = xHatAugk;
 xpMat = zeros(nx,2*(nx+nv));
-uk = [M.omegaBtilde;M.fB;M.omegaVec];
+uk = [M.omegaBtilde;M.fB];
 xp0 = f_dynamics(sp0(1:nx),uk,sp0(nx+1:end),S.delt,RBIHatk,P);
 for ii=1:2*(nx+nv)
   jj = ii; pm = 1;

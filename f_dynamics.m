@@ -16,7 +16,7 @@ function [xkp1] = f_dynamics(xk,uk,vk,delt,RBIHatk,P)
 %
 % uk --------- 10x1 measurement input vector at time tk, defined as
 %
-%              uk = [omegaBtilde', fB', omegaVec']'
+%              uk = [omegaBtilde', fB']'
 %
 %              where all corresponding quantities are identical to those
 %              defined for M in stateEstimatorUKF.m.
@@ -72,7 +72,6 @@ bgk = xk(13:15);
 lBk = xk(16:18);
 omegaBtildek = uk(1:3);
 fBk = uk(4:6);
-omegaVeck = uk(7:10);
 
 vgk = vk(1:3);
 vg2k = vk(4:6);
@@ -82,16 +81,7 @@ RBIk = euler2dcm(ek)*RBIHatk;
 
 rIkp1 = rIk + delt*vIk;
 omegaBk = omegaBtildek - bgk - vgk; 
-% Determine current omegaBdotk
-FMat = [zeros(2,4);(P.quadParams.kF.*(omegaVeck.^2))'];
-NMat = [zeros(2,4);(P.quadParams.kN.*(omegaVeck.^2).*(-P.quadParams.omegaRdir)')'];
-NB = sum(NMat,2);
-Jq = P.quadParams.Jq;
-for ii=1:4
-  NB = NB + cross(P.quadParams.rotor_loc(:,ii),FMat(:,ii));
-end
-omegaBdotk = Jq\(NB - crossProductEquivalent(omegaBk)*Jq*omegaBk);
-aIk = RBIk'*(fBk - 0*cross(omegaBdotk,lBk) - cross(omegaBk,cross(omegaBk,lBk)) ...
+aIk = RBIk'*(fBk - cross(omegaBk,cross(omegaBk,lBk)) ...
     - bak - vak) - P.constants.g*[0;0;1];
 edotk = omegaBtildek - bgk - vgk;
 vIkp1 = vIk + delt*aIk;
