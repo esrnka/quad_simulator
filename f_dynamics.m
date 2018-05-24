@@ -14,7 +14,7 @@ function [xkp1] = f_dynamics(xk,uk,vk,delt,RBIHatk,P)
 %              dRBI(e)*RBIHat, where dRBI(e) is the DCM formed from the error
 %              Euler angle vector e.
 %
-% uk --------- 10x1 measurement input vector at time tk, defined as
+% uk --------- 6x1 measurement input vector at time tk, defined as
 %
 %              uk = [omegaBtilde', fB']'
 %
@@ -77,8 +77,8 @@ vgk = vk(1:3);
 vg2k = vk(4:6);
 vak = vk(7:9);
 va2k = vk(10:12);
-RBIk = euler2dcm(ek)*RBIHatk;
 
+RBIk = euler2dcm(ek)*RBIHatk;
 rIkp1 = rIk + delt*vIk;
 omegaBk = omegaBtildek - bgk - vgk; 
 aIk = RBIk'*(fBk - cross(omegaBk,cross(omegaBk,lBk)) ...
