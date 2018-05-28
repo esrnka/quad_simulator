@@ -64,9 +64,7 @@ function [R] = PathSmoothing(W)
 %
 %+------------------------------------------------------------------------------+
 % References: http://ieeexplore.ieee.org/document/5980409/
-%
-%
-% Author: Marcelino Mendes de Almeida
+% Author: Marcelino Almeida
 %+==============================================================================+  
 
 %Quadratic matrix

@@ -22,10 +22,7 @@ function [r,v,a] = estimatePva(rTildeMat,delt)
 %              rTildeMat(N,:)' was measured.
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Todd Humphreys
 %+==============================================================================+  
 
 Np = 2;

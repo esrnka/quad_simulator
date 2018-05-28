@@ -13,10 +13,7 @@ function [uCross] = crossProductEquivalent(u)
 % uCross ----- 3-by-3 skew-symmetric cross-product equivalent matrix
 % 
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Evan Srnka
 %+==============================================================================+ 
 
 uCross = [  0 -u(3) u(2);

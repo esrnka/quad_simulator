@@ -19,10 +19,7 @@ function [H] = quadraticMatrix(W)
 %                 quadratic programming problem
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:
+% Author: Evan Srnka
 %+==============================================================================+
 %Determine Hi matrix size
 N = length(W.tVecWp);

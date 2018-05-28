@@ -41,10 +41,7 @@ function [fB,omegaBtilde] = imuSimulator(S,P)
 % omegaBtilde  3x1 angular rate measured by the IMU's 3-axis rate gyro
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Todd Humphreys, Evan Srnka
 %+==============================================================================+
 persistent ba bg
 
@@ -64,8 +61,9 @@ ba = P.sensorParams.alphaa*ba + chol(P.sensorParams.Qa2)'*randn(3,1);
 bg = P.sensorParams.alphag*bg + chol(P.sensorParams.Qg2)'*randn(3,1);
 
 % Define misalignment and scale factor error matrix (from accelgen.m)
-M = [1.0682, 0.0014, 0.0792; -0.0208, 0.9950, 0.0436; -0.0921, ...
-    0.0232, 1.0936];
+% M = [1.0682, 0.0014, 0.0792; -0.0208, 0.9950, 0.0436; -0.0921, ...
+%     0.0232, 1.0936];
+M = eye(3);
 
 % IMU measurements
 fB = M*S.statek.RBI*(S.statek.aI + [0;0;P.constants.g]) + ...

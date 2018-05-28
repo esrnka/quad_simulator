@@ -68,7 +68,6 @@ function [Q,Ms] = simulateQuadrotorEstimationAndControl(R,S,P)
 %  sensorParams = Structure containing sensor parameters, as defined in
 %                 sensorParamsScript.m
 %
-%
 % OUTPUTS
 %
 % Q ---------- Structure with the following elements:
@@ -97,10 +96,7 @@ function [Q,Ms] = simulateQuadrotorEstimationAndControl(R,S,P)
 %                       radians, that applies at tVec(k).
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:
+% Author: Todd Humphreys, Evan Srnka
 %+==============================================================================+
 
 last = 0;
@@ -158,7 +154,6 @@ for kk=1:N-1
     Q.meas.fB = [Q.meas.fB; M.fB'];
     Q.meas.omegaBtilde = [Q.meas.omegaBtilde; M.omegaBtilde'];
     
-    %E = stateEstimator(Se,M,P);
     if(~isempty(E.statek))
         % Call trajectory and attitude controllers
         Rtc.rIstark = R.rIstar(kk,:)';
@@ -219,6 +214,9 @@ for kk=1:N-1
     end
     
 end
+
+% Bundle together outputs to be used for visualization
+
 XMat = [XMat;XMatk(end,:)];
 tVec = [tVec;tVeck(end,:)];
 

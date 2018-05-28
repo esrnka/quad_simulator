@@ -24,10 +24,7 @@ function [eak] = voltageConverter(Fk,NBk,P)
 %              volts. eak(i) is the voltage for the ith motor.
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Evan Srnka
 %+==============================================================================+  
 
 % Determine maximum force that can be applied by any rotor

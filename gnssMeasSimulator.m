@@ -36,10 +36,7 @@ function [rPtilde,rStilde,rCtilde] = gnssMeasSimulator(S,P)
 %              the known distance between the two antennas.
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author: Evan Srnka
 %+==============================================================================+  
 
 RIG = Recef2enu(P.sensorParams.r0G);

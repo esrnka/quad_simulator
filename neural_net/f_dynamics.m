@@ -51,12 +51,9 @@ function [xkp1] = f_dynamics(xk,uk,vk,delt,RBIHatk,P)
 %
 % OUTPUTS
 %
-% xkp1 ------- 18x1 state vector propagated to time tkp1
+% xkp1 ------- 15x1 state vector propagated to time tkp1
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
 % Author: Todd Humphreys
 %+==============================================================================+  
 

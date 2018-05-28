@@ -47,7 +47,8 @@ function P = visualizeQuad(S)
 %+==============================================================================+
   
 % Important params
-figureNumber = 42; figure(figureNumber); clf;
+hold on
+figureNumber = 1; figure(figureNumber); %clf;
 fcounter = 0; %frame counter for gif maker
 m = length(S.tVec);
 

@@ -19,10 +19,7 @@ function x = solveQuadProg(H, Aeq, beq)
 %          x = N_x x 1 vector with optimal solution
 % 
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author: 
+% Author: Evan Srnka
 %+==============================================================================+
 Nx = size(H,1);
 Nr = size(beq,1);

@@ -60,10 +60,7 @@ function [Aeq_wp,beq_wp] = waypointCond(W)
 %                 in the z direction in a minimum snap problem
 % 
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author: 
+% Author: Marcelino Almeida
 %+==============================================================================+ 
 
 wp_x = [W.rIwp(:,1)'; W.vIwp(:,1)'; W.aIwp(:,1)'; W.jIwp(:,1)'];

@@ -35,10 +35,7 @@ function [rXIHat,Re] = estimate3dFeatureLocation(M,P)
 % Re ------------ 3x3 error covariance matrix for the estimate rxIHat.
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Evan Srnka
 %+==============================================================================+  
 
 %Determine number of features 

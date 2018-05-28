@@ -18,10 +18,7 @@ function [lat,lon,alt] = ecef2lla(pVec)
 % alt ----- altitude (height) in meters above the ellipsoid
 % 
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Todd Humphreys
 %+==============================================================================+
 
 navConstants;

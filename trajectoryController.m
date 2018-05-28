@@ -48,10 +48,7 @@ function [Fk,zIstark] = trajectoryController(R,S,P)
 % zIstark ---- Desired 3x1 body z axis expressed in I frame at time tk.    
 %                  
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Evan Srnka
 %+==============================================================================+  
 
 % Set control gains

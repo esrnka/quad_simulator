@@ -1,7 +1,5 @@
 function [NBk] = attitudeController(R,S,P)
 % attitudeController : Controls quadcopter toward a reference attitude
-%
-%
 % INPUTS
 %
 % R ---------- Structure with the following elements:
@@ -35,18 +33,13 @@ function [NBk] = attitudeController(R,S,P)
 %
 %     constants = Structure containing constants used in simulation and
 %                 control, as defined in constantsScript.m 
-%
-%
 % OUTPUTS
 %
 % NBk -------- Commanded 3x1 torque expressed in the body frame at time tk, in
 %              N-m.
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Evan Srnka
 %+==============================================================================+  
 
 % Set control gains

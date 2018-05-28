@@ -54,10 +54,7 @@ function [xkp1] = f_dynamics(xk,uk,vk,delt,RBIHatk,P)
 % xkp1 ------- 18x1 state vector propagated to time tkp1
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author: Todd Humphreys
+% Author: Todd Humphreys, Evan Srnka
 %+==============================================================================+  
 
 if(abs(delt - P.sensorParams.IMUdelt) > 1e-9)

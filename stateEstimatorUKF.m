@@ -99,7 +99,7 @@ function [E] = stateEstimatorUKF(S,M,P)
 %                 e, expressed in radians.
 %
 %+------------------------------------------------------------------------------+
-% Author: Todd Humphreys
+% Author: Todd Humphreys, Evan Srnka
 %+==============================================================================+  
 
 %----- Setup

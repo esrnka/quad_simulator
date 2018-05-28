@@ -97,10 +97,7 @@ function [Q,Ms] = simulateQuadrotorEstimationAndControl(R,S,P)
 %                       radians, that applies at tVec(k).
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:
+% Author:  Todd Humphreys, Evan Srnka
 %+==============================================================================+
 
 last = 0;
@@ -144,12 +141,16 @@ for kk=1:N-1
         end
     end
     [M.fB,M.omegaBtilde] = imuSimulator(Sm,P);
-    
+    % Load the measurement data and state data into the neural network data
+    % matrix
     nndata = [nndata; M.rPtilde; M.rStilde; M.rCtilde; ...
         M.fB; M.omegaBtilde; statek.rI; statek.vI; ...
         statek.omegaB; dcm2euler(statek.RBI)];
-    % Every 1 second update
+    % Every 1 second update the lever arm estimate. This assumes a 200Hz
+    % sample rate. 
     if length(nndata) == 5400
+        % myNeuralNetworkFunction is quite large and unwieldy. Do not open
+        % the file unless necessary
         Y = myNeuralNetworkFunction({nndata});
         P.lB = Y{:};
         nndata = [];
@@ -158,7 +159,6 @@ for kk=1:N-1
     % Call estimator
     E = stateEstimatorUKF(Se,M,P);
     
-    %E = stateEstimator(Se,M,P);
     if(~isempty(E.statek))
         % Call trajectory and attitude controllers
         Rtc.rIstark = R.rIstar(kk,:)';
@@ -219,6 +219,9 @@ for kk=1:N-1
     end
     
 end
+
+% Bundle the data for visualization
+
 XMat = [XMat;XMatk(end,:)];
 tVec = [tVec;tVeck(end,:)];
 

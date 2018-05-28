@@ -22,10 +22,7 @@ function [Aeq_cont,beq_cont] = continuityCond(W)
 %              minimum snap problem
 % 
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author: 
+% Author: Marcelino Almeida 
 %+==============================================================================+  
 
 t_w = W.tVecWp;

@@ -12,6 +12,9 @@ function [T] = timeVectors(t, O)
 %        Ca = (O+1)x1 vector with 2nd derivative of polynomial coefficients
 %        Cj = (O+1)x1 vector with 3rd derivative of polynomial coefficients
 %        Cs = (O+1)x1 vector with 4th derivative of polynomial coefficients
+%+------------------------------------------------------------------------------+
+% Author: Evan Srnka
+%+==============================================================================+
 
 % Initialize all polynomial vectors
 T.Cp = zeros(O+1,1);

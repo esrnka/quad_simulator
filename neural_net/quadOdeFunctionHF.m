@@ -41,10 +41,7 @@ function [Xdot] = quadOdeFunctionHF(t,X,eaVec,distVec,P)
 % Xdot ------- Nx-by-1 time derivative of the input vector X
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Todd Humphreys
 %+==============================================================================+
 
 % Extract quantities from state vector

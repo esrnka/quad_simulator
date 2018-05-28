@@ -1,3 +1,9 @@
+% neural net preprocess : Loads data into the appropriate structures to be
+%                         used by Matlab's neural network toolbox
+%
+%+------------------------------------------------------------------------------+
+% Author:  Evan Srnka
+%+==============================================================================+  
 clear all; clc;
 % Create the empty data matrices
 data = []; inputs = []; targets = [];

@@ -25,10 +25,7 @@ function [RBI] = wahbaSolver(aVec,vIMat,vBMat)
 %              B frame relative to the I frame.
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Todd Humphreys
 %+==============================================================================+  
 
 B = zeros(3,3);

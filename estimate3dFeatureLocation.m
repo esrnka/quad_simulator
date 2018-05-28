@@ -3,7 +3,6 @@ function [rXIHat,Re] = estimate3dFeatureLocation(M,P)
 %                             point seen by two or more cameras with known
 %                             pose.    
 %
-%
 % INPUTS
 %
 % M ---------- Structure with the following elements:
@@ -35,10 +34,7 @@ function [rXIHat,Re] = estimate3dFeatureLocation(M,P)
 % Re ------------ 3x3 error covariance matrix for the estimate rxIHat.
 %
 %+------------------------------------------------------------------------------+
-% References:
-%
-%
-% Author:  
+% Author:  Evan Srnka
 %+==============================================================================+  
 
 %Determine number of features 
